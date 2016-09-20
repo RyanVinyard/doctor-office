@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="PatientTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2016-09-20T22:59:30" hostname="epicodus-26.local" time="0.05">
+  <properties/>
+  <testcase name="Patient_instantiatesWithName_String" classname="PatientTest" time="0.04"/>
+  <testcase name="Patient_instantiatesCorrectly_true" classname="PatientTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -12,7 +12,9 @@ public class DoctorTest {
 
   @Test
   public void Doctor_instantiatesCorrectly_True() {
-    Doctor testDoctor = new Doctor("pediatrician");
+    Doctor testDoctor = new Doctor("Connors", "turning into a lizard and fighting Spiderman");
     assertTrue(testDoctor instanceof Doctor);
   }
+
+
 }

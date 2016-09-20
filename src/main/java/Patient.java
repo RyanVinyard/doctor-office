@@ -27,7 +27,7 @@ public class Patient {
   }
 
   public static List<Patient> all() {
-    String sql = "SELECT * FROM patient";
+    String sql = "SELECT * FROM patients";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql).executeAndFetch(Patient.class);
     }
@@ -40,15 +40,15 @@ public class Patient {
     } else {
       Patient newPatient = (Patient) otherPatient;
       return this.getName().equals(newPatient.getName()) &&
-             this.getDoctorId().equals(newPatient.getDoctorId()) &&
-             this.getId().equals(newPatient.getDoctorId());
+             this.getDoctorId() == (newPatient.getDoctorId()) &&
+             this.getId() == (newPatient.getDoctorId());
 
     }
   }
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO patient(name, doctorId) VALUES (:name, :doctorId)";
+      String sql = "INSERT INTO patients(name, doctorId) VALUES (:name, :doctorId)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
         .addParameter("doctorId", this.doctorId)
@@ -56,9 +56,9 @@ public class Patient {
     }
   }
 
-  public Patient find(int id) {
+  public static Patient find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      Patient patient = con.createQuery("SELECT * FROM patient where id=:id")
+      Patient patient = con.createQuery("SELECT * FROM patients where id=:id")
         .addParameter("id", id)
         .executeAndFetchFirst(Patient.class);
       return patient;
@@ -68,7 +68,7 @@ public class Patient {
   public void updateName(String newName) {
     this.name = newName;
     try(Connection con = DB.sql2o.open()) {
-      String sql = "UPDATE patient SET name = :walkergirl WHERE id = :id";
+      String sql = "UPDATE patients SET name = :walkergirl WHERE id = :id";
       con.createQuery(sql)
         .addParameter("walkergirl", newName)
         .addParameter("id", this.id)

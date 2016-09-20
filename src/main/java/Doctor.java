@@ -4,11 +4,13 @@ import java.util.List;
 import org.sql2o.*;
 
 public class Doctor {
+  private String name;
   private String specialty;
   private List<Patient> patients;
   private int id;
 
-  public Doctor(String specialty) {
+  public Doctor(String name, String specialty) {
+    this.name = name;
     this.specialty = specialty;
     this.save();
   }
@@ -21,12 +23,16 @@ public class Doctor {
     return patients;
   }
 
+  public String getName() {
+    return name;
+  }
+
   public int getId() {
     return id;
   }
 
   public static List<Doctor> all() {
-    String sql = "SELECT id, specialty, patients FROM doctor";
+    String sql = "SELECT id, specialty, patients FROM doctors";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql).executeAndFetch(Doctor.class);
     }
@@ -46,10 +52,11 @@ public class Doctor {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO doctor(specialty, patients) VALUES (:specialty, :patients)";
+      String sql = "INSERT INTO doctors(specialty, patients, name) VALUES (:specialty, :patients, :name)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("specialty", this.specialty)
         .addParameter("patients", this.patients)
+        .addParameter("name", this.name)
         .executeUpdate()
         .getKey();
     }
@@ -57,7 +64,7 @@ public class Doctor {
 
   public static Doctor find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      Doctor doctor = con.createQuery("SELECT * FROM doctor where id=:id")
+      Doctor doctor = con.createQuery("SELECT * FROM doctors where id=:id")
         .addParameter("id", id)
         .executeAndFetchFirst(Doctor.class);
       return doctor;
