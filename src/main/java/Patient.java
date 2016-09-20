@@ -39,9 +39,8 @@ public class Patient {
       return false;
     } else {
       Patient newPatient = (Patient) otherPatient;
-      return this.getName().equals(newPatient.getName()) &&
-             this.getDoctorId() == (newPatient.getDoctorId()) &&
-             this.getId() == (newPatient.getDoctorId());
+      return (this.getDoctorId() == newPatient.getDoctorId()) &&
+             (this.getId() == newPatient.getId());
 
     }
   }

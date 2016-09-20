@@ -6,7 +6,6 @@ import org.sql2o.*;
 public class Doctor {
   private String name;
   private String specialty;
-  private List<Patient> patients;
   private int id;
 
   public Doctor(String name, String specialty) {
@@ -20,7 +19,12 @@ public class Doctor {
   }
 
   public List<Patient> getPatients() {
-    return patients;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM patients WHERE doctorId = :id";
+      return con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeAndFetch(Patient.class);
+    }
   }
 
   public String getName() {
@@ -32,7 +36,7 @@ public class Doctor {
   }
 
   public static List<Doctor> all() {
-    String sql = "SELECT id, specialty, patients FROM doctors";
+    String sql = "SELECT id, specialty FROM doctors";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql).executeAndFetch(Doctor.class);
     }
@@ -45,17 +49,15 @@ public class Doctor {
     } else {
       Doctor newDoctor = (Doctor) otherDoctor;
       return this.getId() == newDoctor.getId() &&
-             this.getSpecialty().equals(newDoctor.getSpecialty()) &&
-             this.getPatients().equals(newDoctor.getPatients());
+             this.getSpecialty().equals(newDoctor.getSpecialty());
     }
   }
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO doctors(specialty, patients, name) VALUES (:specialty, :patients, :name)";
+      String sql = "INSERT INTO doctors(specialty, name) VALUES (:specialty, :name)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("specialty", this.specialty)
-        .addParameter("patients", this.patients)
         .addParameter("name", this.name)
         .executeUpdate()
         .getKey();
